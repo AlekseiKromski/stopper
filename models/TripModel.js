@@ -1,7 +1,8 @@
 /*
 * All filed is null, bcs i used parser and not all field was filled
 * */
-const {sequelize, DataTypes} = require("sequelize")
+const {DataTypes} = require("sequelize")
+const sequelize = require("./../db.connection")
 
 const Trip = sequelize.define('trips', {
     // Model attributes are defined here

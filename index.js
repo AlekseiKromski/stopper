@@ -4,15 +4,18 @@ require("dotenv").config()
 
 const bodyParser = require("body-parser")
 const db = require('./db.connection')
+require("./models/associations")
 const express = require("express");
 const app = express();
 const Pages__router = require('./routes/pages')
+const Search_router = require('./routes/api/search')
 
 
-app.use(bodyParser.json())
-app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.json());
 app.use("/dist", express.static(path.join("front-end", "dist")))
 app.use('/', Pages__router)
+app.use('/api/search', Search_router)
 
 try {
     db.authenticate();
