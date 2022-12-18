@@ -3,6 +3,8 @@
     <div class="row">
       <navbar/>
       <geo-location/>
+      <stop-location/>
+      <next-step/>
     </div>
   </div>
 </template>
@@ -10,11 +12,15 @@
 <script>
 import Navbar from "@/components/ui/Navbar";
 import GeoLocation from "@/components/ui/GeoLocation";
+import StopLocation from "@/components/ui/StopLocation";
+import NextStep from "@/components/ui/elements/NextStep";
 export default {
   name: "index.vue",
   components: {
     "navbar": Navbar,
-    "geo-location": GeoLocation
+    "geo-location": GeoLocation,
+    "stop-location": StopLocation,
+    "next-step": NextStep
   }
 }
 </script>

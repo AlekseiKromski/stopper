@@ -5,7 +5,8 @@ const routes = [
   {
     path: '/',
     name: 'index',
-    component: indexVue
+    component: indexVue,
+    meta: { title: 'Stopper - best stop service in Estonia' }
   },
 ]
 
