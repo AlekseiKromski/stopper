@@ -84,6 +84,7 @@ input:focus{
   display: none;
   max-height: 300px;
   overflow: scroll;
+  z-index: 3;
 }
 .select-list ul {
   margin: 0px;

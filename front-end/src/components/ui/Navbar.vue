@@ -11,20 +11,22 @@
 
     </div>
     <div class="col-4 d-flex justify-content-end align-items-center">
-      <button-main>Need help?</button-main>
+      <button-main :action="clearAll">Clear all</button-main>
     </div>
   </div>
 </template>
 
 <script>
 import Button from "@/components/ui/elements/Button"
+import {mapActions} from "vuex";
+
 export default {
   name: "Navbar",
   components: {
     'button-main': Button
   },
-  mounted() {
-
+  methods: {
+    ...mapActions(['clearAll'])
   }
 }
 </script>

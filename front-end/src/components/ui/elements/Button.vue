@@ -1,12 +1,20 @@
 <template>
-  <div class="button d-flex justify-content-center align-items-center text-center">
+  <div
+      @click="preaction()"
+      class="button d-flex justify-content-center align-items-center text-center">
     <slot/>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Button"
+  props: ["action"],
+  name: "Button",
+  methods: {
+    preaction(){
+      this.action()
+    }
+  }
 }
 </script>
 

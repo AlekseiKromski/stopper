@@ -25,5 +25,17 @@ export default {
 
 #app{
   font-family: 'Ubuntu', sans-serif;
+  padding: 15px;
+}
+
+@keyframes show-animation {
+  from{
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to{
+    opacity: 1;
+    transform: translateY(0px);
+  }
 }
 </style>

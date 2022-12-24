@@ -1,6 +1,7 @@
 const Router = require("express").Router()
 const TimeModel = require("../../models/TimeModel")
 const TripModel = require("../../models/TripModel")
+const RouteModel = require("../../models/RouteModel")
 const StopModel = require("../../models/StopModel")
 const RegionModel = require("../../models/RegionModel")
 const { Op } = require("sequelize")
@@ -15,29 +16,6 @@ Router.get('/region/:region', async (req,res) => {
                         [Op.like]: `%${region}%`
                     }
                 },
-            })
-        )
-    }catch (e){
-        console.error(e)
-        return generateError(res, e, 500)
-    }
-})
-
-Router.get('/trip/:tripId', async (req,res) => {
-    try{
-        let tripId = getFromRequest(req.params.tripId)
-        return res.status(200).json(
-            await TripModel.findAll({
-                where:{
-                    id: tripId,
-                },
-                include: {
-                    model: TimeModel,
-                    include: StopModel
-                },
-                order:[
-                    [TimeModel, "arrival_time", "ASC"]
-                ],
             })
         )
     }catch (e){
@@ -69,19 +47,90 @@ Router.post('/stops/:stopName?', async (req,res) => {
     }
 })
 
-Router.post('/trips/', async (req,res) => {
+Router.get('/bus/:stopId?', async (req,res) => {
     try{
-        let stopId = getFromRequest(req.body.stop)
-
-        return res.status(200).json(
-            await TimeModel.findAll({
-                where:{
-                    stop_id: stopId,
+        let stop_id = getFromRequest(req.params.stopId)
+        let stops = await StopModel.findAll({
+            where: {
+                id: stop_id
+            },
+            include: [
+                {
+                    model: TimeModel,
+                    include: {
+                        model: TripModel,
+                        include: {
+                            model: RouteModel
+                        }
+                    }
                 },
-                include: TripModel
-            })
-        )
+            ]
+        })
+        let unique = []
+        stops.forEach( stop => {
+            for(let time of stop.times){
+                console.log(unique.indexOf(time.trip.route.bus))
+                if(unique.indexOf(time.trip.route.bus) == -1){
+                    unique.unshift(time.trip.route.bus)
+                }
+            }
+        })
+        return res.status(200).json(unique)
+    }catch (e){
+        console.error(e)
+        return generateError(res, e, 500)
+    }
+})
 
+Router.post('/bus-times/', async (req,res) => {
+    try{
+        let stop_id = getFromRequest(req.body.stopId)
+        let bus_name = getFromRequest(req.body.busName)
+        let times = await TimeModel.findAll({
+            where: {
+                stop_id: stop_id
+            },
+            order: [["arrival_time", "ASC"]],
+            include: [
+                {
+                    model: TripModel,
+                    include: {
+                        model: RouteModel,
+                        where: {
+                            bus: bus_name
+                        },
+                    },
+                }
+            ]
+        })
+
+        let sorted_times = times.filter(time => time.trip != null)
+        return res.status(200).json(sorted_times)
+    }catch (e){
+        console.error(e)
+        return generateError(res, e, 500)
+    }
+})
+
+Router.get('/trip-info/:tripId', async (req,res) => {
+    try{
+        let tripId = getFromRequest(req.params.tripId)
+        let times = await TripModel.findOne({
+            where: {
+                id: tripId
+            },
+            include: [
+                {
+                    order: [["arrival_time", "ASC"]],
+                    model: TimeModel,
+                    include: {
+                        model: StopModel
+                    }
+                },
+            ]
+        })
+
+        return res.status(200).json(times)
     }catch (e){
         console.error(e)
         return generateError(res, e, 500)

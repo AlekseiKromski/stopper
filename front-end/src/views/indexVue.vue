@@ -4,8 +4,10 @@
       <navbar/>
       <geo-location/>
       <stop-location/>
-      <next-step/>
-      <trip-location/>
+      <next-step v-if="getBusState"/>
+      <trip-location v-if="getBusState"/>
+      <next-step v-if="getTimesState"/>
+      <bus-time-info v-if="getTimesState"/>
     </div>
   </div>
 </template>
@@ -16,6 +18,9 @@ import GeoLocation from "@/components/ui/GeoLocation";
 import StopLocation from "@/components/ui/StopLocation";
 import NextStep from "@/components/ui/elements/NextStep";
 import TripLocation from "@/components/ui/TripLocation";
+import BusTimeInformation from "@/components/ui/BusTimeInformation";
+import {mapGetters} from "vuex";
+
 export default {
   name: "index.vue",
   components: {
@@ -23,8 +28,10 @@ export default {
     "geo-location": GeoLocation,
     "stop-location": StopLocation,
     "next-step": NextStep,
-    'trip-location': TripLocation
-  }
+    'trip-location': TripLocation,
+    'bus-time-info': BusTimeInformation
+  },
+  computed: {...mapGetters(['getBusState','getTimesState'])}
 }
 </script>
 

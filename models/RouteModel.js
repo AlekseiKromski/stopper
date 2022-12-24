@@ -4,21 +4,17 @@
 const {DataTypes} = require("sequelize")
 const sequelize = require("./../db.connection")
 
-const Trip = sequelize.define('trips', {
+const Route = sequelize.define('routes', {
     // Model attributes are defined here
     id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         primaryKey: true,
     },
-    route_id: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    trip_headsign: {
+    bus: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    trip_long_name: {
+    route_name: {
         type: DataTypes.STRING,
         allowNull: true
     },
@@ -27,4 +23,4 @@ const Trip = sequelize.define('trips', {
     timestamps: false
 });
 
-module.exports = Trip
+module.exports = Route

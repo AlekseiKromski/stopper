@@ -21,10 +21,13 @@ export default {
 }
 .icon-block{
   margin: 37px 0px 37px 0px;
+  animation-name: show-animation;
+  animation-duration: 0.6s;
 }
 .icon:hover{
   height: 47px;
   width: 47px;
   transition: 0.3s;
 }
+
 </style>

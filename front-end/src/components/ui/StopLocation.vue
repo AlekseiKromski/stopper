@@ -19,10 +19,25 @@
           />
         </div>
       </div>
-      <div class="row align-items-end info p-0">
-        <div class="col-6 p-0 info-text">Narva, paul kerese 13</div>
+      <div class="row justify-content-between info p-0">
+        <div class="col-6 d-flex justify-content-start align-items-end p-0 info-text" >
+          <span v-if="getRegion != null" :class="{
+            'show': getRegion != null,
+            'path': true
+          }">{{ getRegion.name }},
+
+            <span v-if="getStop != null" :class="{
+              'show': getStop != null,
+              'path stop ms-1': true,
+            }"> {{ getStop.stop_name }}</span>
+
+          </span>
+
+        </div>
         <div class="col-6 p-0 d-flex justify-content-end">
-          <button-main>
+          <button-main
+            :action="preNextAction"
+          >
             Next step
           </button-main>
         </div>
@@ -42,7 +57,7 @@ export default {
     "input-select": InputSelect
   },
   computed:{
-    ...mapGetters(["getAxios", "getRegion"])
+    ...mapGetters(["getAxios", "getRegion", "getStop"])
   },
   data(){
     return {
@@ -83,7 +98,26 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["setForm"])
+    ...mapActions(["setForm", 'nextStep']),
+    preNextAction(){
+      this.nextStep({
+        stepName: 'bus',
+        value: false
+      })
+      this.nextStep({
+        stepName: 'times',
+        value: false
+      })
+
+      setTimeout(() => {
+        if(this.getRegion != undefined && this.getStop != undefined && this.getRegion != null && this.getStop != null ){
+          this.nextStep({
+            stepName: 'bus',
+            value: true
+          })
+        }
+      }, 150)
+    }
   }
 }
 </script>
@@ -102,5 +136,16 @@ export default {
 .info-text{
   font-weight: 300;
   color: #000000;
+  position: relative;
+}
+.show{
+  transition: 0.2s;
+  animation-name: show-animation;
+  animation-duration: 0.6s;
+}
+.path{
+  position: absolute;
+  z-index: 1;
+  width: 250px;
 }
 </style>
