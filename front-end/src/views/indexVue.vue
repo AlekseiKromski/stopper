@@ -5,6 +5,7 @@
       <geo-location/>
       <stop-location/>
       <next-step/>
+      <trip-location/>
     </div>
   </div>
 </template>
@@ -14,13 +15,15 @@ import Navbar from "@/components/ui/Navbar";
 import GeoLocation from "@/components/ui/GeoLocation";
 import StopLocation from "@/components/ui/StopLocation";
 import NextStep from "@/components/ui/elements/NextStep";
+import TripLocation from "@/components/ui/TripLocation";
 export default {
   name: "index.vue",
   components: {
     "navbar": Navbar,
     "geo-location": GeoLocation,
     "stop-location": StopLocation,
-    "next-step": NextStep
+    "next-step": NextStep,
+    'trip-location': TripLocation
   }
 }
 </script>

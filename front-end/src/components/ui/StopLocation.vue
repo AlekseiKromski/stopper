@@ -3,20 +3,20 @@
     <div class="stop-location row p-0 m-0 justify-content-center">
       <div class="row p-0">
         <div class="col-6 p-0">
-          <form class="pe-2">
-            <div class="form-group">
-              <label for="regionName">Region name:</label>
-              <input type="text" class="form-control mt-1" id="regionName" placeholder="Enter region name">
-            </div>
-          </form>
+          <input-select
+              title="Region name"
+              placeholder="Enter region name"
+              :tool="regionTool"
+              fieldName="name"
+          />
         </div>
         <div class="col-6 p-0">
-          <form class="ps-2">
-            <div class="form-group">
-              <label for="stopName">Stop name:</label>
-              <input type="text" class="form-control mt-1" id="stopName" placeholder="Enter stop name">
-            </div>
-          </form>
+          <input-select
+              title="Stop name"
+              placeholder="Enter stop name"
+              :tool="stopTool"
+              fieldName="stop_name"
+          />
         </div>
       </div>
       <div class="row align-items-end info p-0">
@@ -33,10 +33,57 @@
 
 <script>
 import Button from "@/components/ui/elements/Button"
+import InputSelect from "@/components/ui/elements/InputSelect";
+import {mapGetters, mapActions} from "vuex";
 export default {
   name: "StopLocation",
   components: {
-    "button-main": Button
+    "button-main": Button,
+    "input-select": InputSelect
+  },
+  computed:{
+    ...mapGetters(["getAxios", "getRegion"])
+  },
+  data(){
+    return {
+      regionTool: {
+        search: (item) => {
+          if(item != ""){
+            this.getAxios.get(`/api/search/region/${item}`).then(
+                response => {
+                  this.regionTool.dataList = response.data
+                }
+            )
+          }
+        },
+        save: (item) => this.setForm({
+          field: "region",
+          value: item
+        }),
+        dataList: []
+      },
+      stopTool: {
+        search: (item) => {
+          if(item != "" && (this.getRegion != null || this.getRegion != undefined)){
+            this.getAxios.post(`/api/search/stops/${item}`, {
+              region: this.getRegion.id
+            }).then(
+                response => {
+                  this.stopTool.dataList = response.data
+                }
+            )
+          }
+        },
+        save: (item) => this.setForm({
+          field: "stop",
+          value: item
+        }),
+        dataList: []
+      }
+    }
+  },
+  methods: {
+    ...mapActions(["setForm"])
   }
 }
 </script>
@@ -48,13 +95,6 @@ export default {
   border-radius: 16px;
   padding: 34px!important;
   margin-top: 22px!important;
-}
-input:focus{
-  color: #212529;
-  background-color: #fff;
-  border-color: #ffb80000;
-  outline: 0;
-  box-shadow: 0 0 0 0.25rem rgb(255 184 0 / 57%);
 }
 .info{
   margin-top: 27px;
