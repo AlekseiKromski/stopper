@@ -16,7 +16,7 @@ app.use(cors({
 }))
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
-app.use("/dist", express.static(path.join("front-end", "dist")))
+app.use("/", express.static(path.join("front-end", "dist")))
 app.use('/', Pages__router)
 app.use('/api/search', Search_router)
 
