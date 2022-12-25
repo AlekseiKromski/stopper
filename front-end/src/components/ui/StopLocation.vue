@@ -8,6 +8,7 @@
               placeholder="Enter region name"
               :tool="regionTool"
               fieldName="name"
+              v-model:inputValue="regionTool.value"
           />
         </div>
         <div class="col-6 p-0">
@@ -16,6 +17,7 @@
               placeholder="Enter stop name"
               :tool="stopTool"
               fieldName="stop_name"
+              v-model:inputValue="stopTool.value"
           />
         </div>
       </div>
@@ -75,7 +77,8 @@ export default {
           field: "region",
           value: item
         }),
-        dataList: []
+        dataList: [],
+        value: ""
       },
       stopTool: {
         search: (item) => {
@@ -93,7 +96,8 @@ export default {
           field: "stop",
           value: item
         }),
-        dataList: []
+        dataList: [],
+        value: ""
       }
     }
   },
@@ -117,6 +121,22 @@ export default {
           })
         }
       }, 150)
+    }
+  },
+  watch: {
+    getRegion: {
+      deep: true,
+      immediate: true,
+      handler(){
+        this.getRegion != null ? this.regionTool.value = this.getRegion.name : this.regionTool.value = ""
+      }
+    },
+    getStop: {
+      deep: true,
+      immediate: true,
+      handler(){
+        this.getStop != null ? this.stopTool.value = this.getStop.stop_name : this.stopTool.value = ""
+      }
     }
   }
 }

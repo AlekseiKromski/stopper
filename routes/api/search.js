@@ -137,6 +137,91 @@ Router.get('/trip-info/:tripId', async (req,res) => {
     }
 })
 
+Router.get('/geo-location/:lat/:lon', async (req,res) => {
+    try{
+        let lat = parseFloat(getFromRequest(req.params.lat))
+        let lon = parseFloat(getFromRequest(req.params.lon))
+
+        let counter = 0.003000
+        let forSearch = {
+            latUp: lat + counter,
+            latDown: lat - counter,
+            lonLeft: lon - counter,
+            lonRight: lon + counter
+        }
+
+        let stops = await StopModel.findAll({
+            where: {
+                [Op.and]: [
+                    {
+                        stop_lat: {
+                            [Op.gte]: forSearch.latDown
+                        }
+                    },
+                    {
+                        stop_lat: {
+                            [Op.lte]: forSearch.latUp
+                        }
+                    },
+                    {
+                        stop_lon: {
+                            [Op.gte]: forSearch.lonLeft
+                        }
+                    },
+                    {
+                        stop_lon: {
+                            [Op.lte]: forSearch.lonRight
+                        }
+                    }
+                ],
+            },
+            include: {
+                model: RegionModel
+            }
+        })
+
+        let approximations = []
+
+        stops.forEach(stop => {
+            let a = 0
+            let b = 0
+            if(stop.stop_lat > lat){
+                a = stop.stop_lat - lat
+            }else {
+                a = lat - stop.stop_lat
+            }
+
+            if(stop.stop_lon > lon){
+                a = stop.stop_lon - lon
+            }else {
+                a = lon - stop.stop_lon
+            }
+
+            approximations.unshift({
+                approximation: Math.sqrt(a**2 + b**2),
+                stop: stop
+            })
+        })
+
+        //find most nearest stop
+        let min = null
+        for(let data of approximations){
+            if(min == null){
+                min = data
+                continue
+            }
+            if(data.approximation < min.approximation){
+                min = data
+            }
+        }
+
+        return res.status(200).json(min.stop)
+    }catch (e){
+        console.error(e)
+        return generateError(res, e, 500)
+    }
+})
+
 module.exports = Router
 
 function generateError(res, e, statusCode){

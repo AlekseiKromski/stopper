@@ -3,7 +3,8 @@
     <div class="form-group">
       <label :for="title">{{title}}:</label>
       <input
-          v-model="inputValue"
+          @input="updateInputValue($event)"
+          :value="inputValue"
           type="text"
           class="form-control mt-1"
           :id="title"
@@ -25,12 +26,11 @@
 
 <script>
 export default {
-  props: ["title", "placeholder", "tool", "fieldName"],
+  props: ["title", "placeholder", "tool", "fieldName", "inputValue"],
   name: "InputSelect",
   data(){
     return {
       isFocused: false,
-      inputValue: ""
     }
   },
   methods: {
@@ -40,21 +40,17 @@ export default {
       }, 150)
     },
     selectHint(item){
-      this.inputValue = item[this.fieldName]
+      this.$emit('update:inputValue', item[this.fieldName])
       this.isFocused = false
       //call the method, for selecting in VUEX
       this.tool.save(item)
+    },
+    updateInputValue(e){
+      this.$emit('update:inputValue', e.target.value)
+      this.tool.search(this.inputValue)
+
     }
   },
-  watch: {
-    inputValue: {
-      deep: true,
-      immediate: true,
-      handler(){
-        this.tool.search(this.inputValue)
-      }
-    }
-  }
 }
 </script>
 

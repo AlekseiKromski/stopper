@@ -28,7 +28,10 @@
             {{time.arrival_time}}
           </div>
         </div>
-        <div class="col-9 p-0 d-flex gap-2 flex-column justify-content-center align-items-center" v-if="!loader && tripInfo != null">
+        <div :class="{
+          'col-9 p-0 d-flex gap-2 flex-column align-items-center': true,
+          'justify-content-center': loaderTable
+        }" v-if="!loader && tripInfo != null">
           <loader-custom v-if="loaderTable"/>
           <table v-if="!loaderTable" class="table">
             <thead>

@@ -2,7 +2,9 @@
   <div
       @click="preaction()"
       class="button d-flex justify-content-center align-items-center text-center">
-    <slot/>
+    <div class="content-custom">
+      <slot />
+    </div>
   </div>
 </template>
 
@@ -40,5 +42,9 @@ export default {
   color: #FFB800;
   border: 2px solid #FFB800;
   box-shadow: 2px 2px 8px #ffb8008f;
+}
+
+.button:hover .content-custom{
+  color: #FFB800;
 }
 </style>

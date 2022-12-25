@@ -2,6 +2,7 @@ const TimeModel = require("./TimeModel")
 const TripModel = require("./TripModel")
 const RouteModel = require("./RouteModel")
 const StopModel = require("./StopModel")
+const RegionModel = require("./RegionModel")
 
 TripModel.hasMany(TimeModel, {
     foreignKey: "trip_id"
@@ -27,4 +28,7 @@ StopModel.hasMany(TimeModel, {
     foreignKey: "stop_id"
 })
 
+StopModel.belongsTo(RegionModel, {
+    foreignKey: "stop_area"
+})
 
