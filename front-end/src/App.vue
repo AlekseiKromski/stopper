@@ -9,7 +9,7 @@ export default {
   name: "App",
   created() {
     const instance = axios.create({
-      baseURL: 'http://localhost:3000/',
+      baseURL: process.env.NODE_ENV === "development" ? 'http://localhost:3000/' : 'https://stopper.alekseikromski.com',
       timeout: 1000,
     });
     this.setAxios(instance)
